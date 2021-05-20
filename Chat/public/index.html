@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+        <v-main>
+          <v-card>
+          <v-card-title class="blue lighten-2 white--text">VUE-GO Chat (by MSA)</v-card-title>
+          <p>{{ Results1 }}</p>
+          <p>{{ Results2 }}</p>
+          <v-form action="/get">
+            <v-text-field
+              v-model="query"
+              name="query"
+              counter="200"
+              label="Your text (here)"
+              required
+            ></v-text-field>
+            <v-btn type="submit">Send</v-btn>
+          </v-form>
+        </v-main>
+    </v-app>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<!--AXIOS-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>               
+
+<script>
+   new Vue({
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: () => ({
+    Results1: "", Results2: "",
+  }),
+  mounted (){
+    axios.post("/post").then(response => {
+    this.Results2 = response.data.out
+    this.Results1 = response.data.in
+    }).catch(err => {
+        alert(err)
+        console.log(err)
+      })
+    },
+})
+</script>
+
+</body>
+</html>
