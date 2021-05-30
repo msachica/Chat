@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+        <v-main>
+          
+          <v-card>
+          <v-card-title class="blue lighten-2 white--text">VUE-GO Chat (by MSA)</v-card-title>
+          </v-card>
+
+          <ul class="overflow-y-auto" style="height: 50vh;" v-chat-scroll="{always: false, smooth: true}">            
+            <template v-for="item in items">
+              <font color="blue" size="2">{{ item.date }}</font>
+              <p><strong>{{ item.title_r }}</strong><br/>{{ item.msg_r }}</p>
+              <p><strong>&emsp;{{ item.title_a }}</strong><br/>&emsp;{{ item.msg_a }}</p>       
+              <v-divider></v-divider>
+            </template>
+          </ul>
+
+          <v-text-field
+            ref="textField"
+            v-model="query"
+            name="query"
+            counter="200"
+            label="Your text (here)"
+            @keydown.enter="submit()"
+            required>
+          </v-text-field>
+          <v-btn @click="submit()">Send</v-btn>
+         
+        </v-main>
+    </v-app>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-chat-scroll/dist/vue-chat-scroll.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<!--AXIOS-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>               
+
+<script>
+   new Vue({
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: () => ({
+    Results1: "", Results2: "",items:[]
+  }), methods:{
+  submit(){
+    var body=new URLSearchParams();
+    body.append('query',this.query);
+    axios.post("/post",body,{headers:{'Content-Type': 'application/x-www-form-urlencoded'},}).then(response => {
+    this.items.push({date:new Date().toLocaleString(),title_r:"Request:",msg_r:response.data.in,title_a:"Answer:",msg_a:response.data.out})
+    }).catch(err => {
+        alert(err)
+        console.log(err)
+      });this.$refs.textField.$el.getElementsByTagName('input')[0].value = '';
+    }},
+})
+</script>
+
+</body>
+</html>
